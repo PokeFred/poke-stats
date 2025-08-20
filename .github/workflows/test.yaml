@@ -17,12 +17,11 @@ jobs:
               with:
                 node-version: 20.x
             - name: Install dependencies
-              run: npm i
+              run: npm install
             - name: Build the application
               run: npm run build
     test:
         name: Test
-        needs: build
         runs-on: ubuntu-latest
         steps:
             - name: Checkout the code
@@ -32,6 +31,22 @@ jobs:
               with:
                 node-version: 20.x
             - name: Install dependencies
-              run: npm i
+              run: npm install
             - name: Test the application
               run: npm run test
+    docker:
+        name: Docker
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout the code
+              uses: actions/checkout@v5.0.0
+            - name: Create .env-File
+              run: mv ./.env.prod.example ./.env
+            - name: Build the container
+              run: docker build -t poke-stats-app ./
+            - name: Running the container
+              run: docker run -d -p 80:80 --name poke-stats-container poke-stats-app
+            - name: Stop the container
+              run: docker stop poke-stats-container
+            - name: Remove the container
+              run: docker rm poke-stats-container
