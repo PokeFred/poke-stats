@@ -36,6 +36,7 @@ jobs:
               run: npm run test
     docker:
         name: Docker
+        needs: build
         runs-on: ubuntu-latest
         steps:
             - name: Checkout the code
