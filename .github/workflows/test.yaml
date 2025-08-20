@@ -36,13 +36,13 @@ jobs:
               run: npm run test
     docker:
         name: Docker
-        needs: build
+        needs: [build, test]
         runs-on: ubuntu-latest
         steps:
             - name: Checkout the code
               uses: actions/checkout@v5.0.0
             - name: Create .env-File
-              run: mv ./.env.prod.example ./.env
+              run: cp .env.prod.example .env
             - name: Build the container
               run: docker build -t poke-stats-app ./
             - name: Running the container
